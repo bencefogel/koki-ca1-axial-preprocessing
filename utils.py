@@ -7,9 +7,9 @@ def save_in_chunks(current_values, output_dir, chunk_size=None):
     Save the current_values array in chunks along the columns to the specified output directory.
 
     Parameters:
-    - current_values (numpy.ndarray): The array of numerical values to be saved.
-    - output_dir (str): The directory where the chunks will be saved.
-    - chunk_size (int): The number of columns to save per chunk (default is all columns).
+        current_values (numpy.ndarray): The array of numerical values to be saved.
+        output_dir (str): The directory where the chunks will be saved.
+        chunk_size (int): The number of columns to save per chunk (default is all columns).
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -29,3 +29,15 @@ def save_in_chunks(current_values, output_dir, chunk_size=None):
 
         np.save(chunk_file, chunk_values)
         print(f"Saved column chunk {i} to {chunk_file}")
+
+
+def get_segment_iax(segment: str) -> pd.DataFrame:
+    ref_mask = df_iax.index.get_level_values("ref") == segment
+    ref_iax = -1 * df_iax[ref_mask]
+
+    par_mask = df_iax.index.get_level_values("par") == segment
+    par_iax = df_iax[par_mask]
+
+    df_iax_seg = pd.concat([ref_iax, par_iax], axis=0)
+
+    return df_iax_seg
