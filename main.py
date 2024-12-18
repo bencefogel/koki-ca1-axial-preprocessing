@@ -5,6 +5,7 @@ import os
 from tqdm import tqdm
 from utils import save_in_chunks
 
+# Load data
 input_dir = 'L:/cluster_seed30/raw_data/'
 v = np.load(input_dir+'/membrane_potential_data/v.npy').astype(np.float32)
 segments = np.load(input_dir+'/membrane_potential_data/segments.npy')
@@ -13,8 +14,8 @@ df_v = pd.DataFrame(data=v)
 df_v.insert(0, 'segment', segments)
 df_connections = pd.read_csv(input_dir+'df_connections.csv', index_col=0)
 
+# Calculate axial currents
 iax = np.empty((df_connections.shape[0], df_v.shape[1]-1))
-
 for i in tqdm(range(len(df_connections.iloc[:, 0]))):
     try:
         ref = df_connections.iloc[i, 0]
@@ -28,13 +29,15 @@ for i in tqdm(range(len(df_connections.iloc[:, 0]))):
     except IndexError:
         print(f"The following segment does not have a parent: {df_connections.iloc[i,0]}")
         iax_row = np.zeros(df_v.shape[1]-1)
-
     iax[i, :] = iax_row
 
-index_df = pd.DataFrame(data={'ref': df_connections['ref'].values, 'par': df_connections['par'].values})
+
 output_dir = 'L:/cluster_seed30/preprocessed_data/axial_currents'
+# Save multiindex as a dataframe
+index_df = pd.DataFrame(data={'ref': df_connections['ref'].values, 'par': df_connections['par'].values})
 os.makedirs(output_dir, exist_ok=True)
 index_file = os.path.join(output_dir, "multiindex.csv")
 index_df.to_csv(index_file, index=False)
 
+# Save current values as arrays
 save_in_chunks(iax, output_dir, chunk_size=20000)

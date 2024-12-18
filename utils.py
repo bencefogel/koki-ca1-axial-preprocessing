@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import os
 
 
@@ -31,12 +32,12 @@ def save_in_chunks(current_values, output_dir, chunk_size=None):
         print(f"Saved column chunk {i} to {chunk_file}")
 
 
-def get_segment_iax(segment: str) -> pd.DataFrame:
-    ref_mask = df_iax.index.get_level_values("ref") == segment
-    ref_iax = -1 * df_iax[ref_mask]
+def get_segment_iax(segment, df):
+    ref_mask = df.index.get_level_values("ref") == segment
+    ref_iax = -1 * df[ref_mask]
 
-    par_mask = df_iax.index.get_level_values("par") == segment
-    par_iax = df_iax[par_mask]
+    par_mask = df.index.get_level_values("par") == segment
+    par_iax = df[par_mask]
 
     df_iax_seg = pd.concat([ref_iax, par_iax], axis=0)
 
