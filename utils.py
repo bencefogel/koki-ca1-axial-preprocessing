@@ -33,8 +33,23 @@ def save_in_chunks(current_values, output_dir, chunk_size=None):
 
 
 def get_segment_iax(segment, df):
+    """
+    Returns a DataFrame containing the axial current values for a specific segment.
+
+    This function extracts the axial currents associated with a
+    specified segment. It handles both cases where the segment is a reference (ref)
+    or a parent (par) in the provided MultiIndex DataFrame.
+
+    Parameters:
+        segment (str): The name of the segment whose axial currents are to be extracted.
+        df (pd.DataFrame): A DataFrame with a MultiIndex containing 'ref' and 'par'
+                           levels, and values representing axial currents.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the axial currents for the given segment.
+    """
     ref_mask = df.index.get_level_values("ref") == segment
-    ref_iax = -1 * df[ref_mask]
+    ref_iax = -1 * df[ref_mask]  # negated, because axial currents are calculated from the perspective of the parent node
 
     par_mask = df.index.get_level_values("par") == segment
     par_iax = df[par_mask]

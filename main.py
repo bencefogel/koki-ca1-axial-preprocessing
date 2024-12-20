@@ -5,6 +5,7 @@ import os
 from tqdm import tqdm
 from utils import save_in_chunks
 
+
 # Load data
 input_dir = 'L:/cluster_seed30/raw_data/'
 v = np.load(input_dir+'/membrane_potential_data/v.npy').astype(np.float32)

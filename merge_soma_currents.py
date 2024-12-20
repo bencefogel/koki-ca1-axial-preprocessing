@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 from utils import get_segment_iax
 
 # Input and output directories
@@ -87,7 +88,7 @@ def process_all_files(index, input_dir, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     # Loop through all chunk files in the input directory
-    for chunk_file in sorted(os.listdir(input_dir)):
+    for chunk_file in tqdm(sorted(os.listdir(input_dir))):
         if chunk_file.startswith('current_values_chunk_') and chunk_file.endswith('.npy'):
             chunk_path = os.path.join(input_dir, chunk_file)
 
